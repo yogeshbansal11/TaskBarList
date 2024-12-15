@@ -9,19 +9,16 @@ const register = async (req, res) => {
 
   try {
     if (!(name && email && password)) {
-      return res.status(404)({ message: "all fields are required" });
+      return res.status(404).json({ message: "all fields are required" });
     }
 
     const userEmail = await usermodel.findOne({ email });
     if (userEmail) {
-      return res.status(400).json({ message: "Email already exist" });
+      return res.status(400).json({ message: "Email already exists" });
     }
 
     const salt = bcrypt.genSaltSync(10);
-    console.log("Generated salt:", salt);
-
     const hash = bcrypt.hashSync(password, salt);
-    console.log("Hashed password:", hash);
 
     const data = {
       name,
@@ -31,15 +28,13 @@ const register = async (req, res) => {
 
     const user = new usermodel(data);
     await user.save();
-    console.log("User successfully saved:", user);
     res.status(200).json(user);
   } catch (error) {
-    console.log("user not saved", error.message);
-    res.status(500).json({
-      message: "internal server error",
-    });
+    console.log("User not saved", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;

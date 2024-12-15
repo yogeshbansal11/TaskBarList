@@ -34,19 +34,6 @@ exports.readtask = async(req,res)=>{
   }
 }
 
-
-exports.completetask=async(req,res)=>{
-  const {taskId} = req.body;
-  try{
-    const task = await Taskmodel.findById(taskId);
-    task.completed = true;
-    await task.save();
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
 exports.updateTask = async (req, res) => {
   const { taskId } = req.params;
   const { listId } = req.body;
@@ -61,3 +48,17 @@ exports.updateTask = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// exports.completetask=async(req,res)=>{
+//   const {taskId} = req.body;
+//   try{
+//     const task = await Taskmodel.findById(taskId);
+//     task.completed = true;
+//     await task.save();
+//     res.json(task);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
+
