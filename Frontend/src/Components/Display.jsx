@@ -12,6 +12,7 @@ const Display = () => {
 
   const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
 
+  
   const fetchLists = async () => {
     if (!userId) {
       console.error("User ID not found.");
