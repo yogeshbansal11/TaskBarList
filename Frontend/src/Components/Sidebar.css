@@ -1,0 +1,45 @@
+/* Sidebar.css */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidebar h3 {
+  color: #fff;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #444;
+}
+
+.sidebar ul li:hover {
+  background-color: #444;
+}
+
+/* Main Content Styling */
+.display-container {
+  display: flex;
+}
+
+.main-content {
+  margin-left: 250px; /* Offset for sidebar */
+  padding: 20px;
+  width: 100%;
+}
+
+.add-list-container {
+  margin-top: 20px;
+}

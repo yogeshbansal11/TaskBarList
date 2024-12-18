@@ -66,4 +66,31 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+
+const forgetpassword = async(req,res)=>{
+  const {email,newpassword} = req.body;
+
+  try{
+    
+    const user = await usermodel.findOne({ email });
+    console.log(".........")
+    if (!user) {
+      return res.status(400).json({ message: "email not found" });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(newpassword, salt);
+
+    user.password = hash;
+ 
+  
+    await user.save()
+    res.status(200).json(user)
+  }
+  catch(error){
+    res.status(500).json({message:error})
+  }
+}
+
+
+module.exports = { register, login,forgetpassword };

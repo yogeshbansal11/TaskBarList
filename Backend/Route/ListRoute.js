@@ -5,5 +5,5 @@ const router1 = express.Router();
 router1.post("/create",listcontroller.createlist)
 router1.get("/:user",listcontroller.readUser)
 // router.post("/move",listcontroller.moveTask)
-
+router1.put("/updatecolor", listcontroller.updateListColor);
 module.exports = router1;

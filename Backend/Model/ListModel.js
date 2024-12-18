@@ -10,6 +10,12 @@ const listSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+
+  //add color
+  color: {
+    type: String,
+    default: '#f9f9f9', // default color
+  },
 });
 
 module.exports = mongoose.model("List", listSchema);

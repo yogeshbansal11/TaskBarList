@@ -1,0 +1,177 @@
+
+  
+  /* Main Container */
+  .display-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Headings */
+  h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0056b3;
+  }
+  
+  /* Add List Section */
+  .add-list-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-list-button:hover {
+    background-color: #004099;
+  }
+  
+  .add-list-container {
+    display: flex;
+    /* border: red 2px solid; */
+    margin-top: 20px;
+  }
+  
+  .add-list-container input {
+    padding: 10px;
+    width: calc(100% - 120px);
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-list-container button {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-list-container button:hover {
+    background-color: #004099;
+  }
+  
+  /* Lists Wrapper */
+  /* .lists-wrapper {
+    margin-top: 20px;
+  } */
+
+  .lists-wrapper {
+    display: flex; /* Use flexbox to arrange items horizontally */
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
+    gap: 20px; /* Add space between lists */
+    overflow-x: auto; /* Allow horizontal scrolling if there are too many lists */
+  }
+  
+  /* .list-item {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  } */
+
+
+  .list-item {
+    flex: 0 0 300px; /* Set a fixed width for each list */
+    min-width: 250px; /* Ensure a minimum width */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .list-item button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .list-item button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Task Input */
+  .task-input-container {
+    margin-top: 15px;
+  }
+  
+  .task-input-container input {
+    padding: 10px;
+    width: calc(100% - 100px);
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .task-input-container button {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .task-input-container button:hover {
+    background-color: #218838;
+  }
+  
+  /* Tasks Section */
+  .tasks-container {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .task-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .task-item:hover {
+    background-color: #e9ecef;
+  }
+  
+  /* Empty State */
+  p {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+  }
+  
