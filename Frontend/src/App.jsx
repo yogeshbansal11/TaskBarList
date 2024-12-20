@@ -10,6 +10,7 @@ import PaymentDetails from "./Components/PaymentDetails";
 
 import "./App.css";
 import ForgetPassword from "./Components/Forgetpassword";
+import Sidebar from "./Components/Sidebar";
 
 const App = () => {
   const [click, setClick] = useState(false);
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/Payment" element={<PaymentPage />} />
         <Route path="/PaymentDetails" element={<PaymentDetails />} />
         <Route path="/Forgetpassword" element={<ForgetPassword />} />
+        <Route path="/sidebar" element={<Sidebar />} />
       </Routes>
     </Router>
   );
