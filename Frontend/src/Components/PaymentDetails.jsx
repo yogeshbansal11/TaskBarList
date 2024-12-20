@@ -7,11 +7,11 @@ const PaymentDetails = () => {
   const plan = location.state || { name: "Default Plan", price: "₹0" }; // Default fallback
 
   const handleUPIPayment = () => {
-    console.log(`UPI Payment initiated for ${plan.name} - ${plan.price}`);
+    alert(`UPI Payment initiated for ${plan.name} - ${plan.price}`);
   };
 
   const handleCardPayment = () => {
-    console.log(`Card Payment initiated for ${plan.name} - ${plan.price}`);
+    alert(`Card Payment initiated for ${plan.name} - ${plan.price}`);
   };
 
   return (

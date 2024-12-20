@@ -1,17 +1,46 @@
-// Sidebar.js
-import React from 'react';
-import './Sidebar.css'; // You can create a separate CSS file for styling
 
-const Sidebar = ({ setActiveSection }) => {
-  return (
-    <div className="sidebar">
-      <h3>Menu</h3>
-      <ul>
-        <li onClick={() => setActiveSection('lists')}>My Lists</li>
-        <li onClick={() => setActiveSection('create')}>Create List</li>
-      </ul>
-    </div>
-  );
+import React, { useState } from 'react';
+import './Sidebar.css';
+
+const Sidebar = () => {
+    const [collapsed, setCollapsed] = useState(false);
+
+    const handleSidebarClick = () => {
+        setCollapsed(!collapsed);
+    };
+
+    return (
+        <div 
+            className={`sidebar-container ${collapsed ? 'collapsed' : ''}`} 
+            onClick={handleSidebarClick}
+        >
+            <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+                {!collapsed && (
+                    <>
+                        <div className="sidebar-header">
+                            <h2 className="workspace-title">Trello Workspace</h2>
+                        </div>
+                        <ul className="sidebar-links">
+                            <li><button className="sidebar-link">Boards</button></li>
+                            <li><button className="sidebar-link">Members</button></li>
+                            <li><button className="sidebar-link">Workspace Settings</button></li>
+                        </ul>
+                        <div className="boards-section">
+                            <h3 className="section-title">Your Boards</h3>
+                            <ul className="boards-list">
+                                <li>
+                                    <button className="board-item">
+                                        <span className="board-color"></span>
+                                        <span className="board-name">regex</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default Sidebar;
