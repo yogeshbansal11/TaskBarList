@@ -1,16 +1,5 @@
 const listmodel = require("../Model/ListModel")
 
-// exports.createlist = async(req,res)=>{
-//   const{name,user} =req.body;
-//   try{
-//     const list = await listmodel.create({name,user:user});
-//     res.status(200).json(list);
-//   }catch(error){
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-
 exports.createlist = async (req, res) => {
   const { name, user, color = "#f9f9f9" } = req.body; // Default color if none is provided
 
