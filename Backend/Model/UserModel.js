@@ -14,6 +14,9 @@ const userschema = mongoose.Schema({
     type: String,
     required: true,
   },
+  expiryTime:{
+    type: String,
+  }
 })
 
 
