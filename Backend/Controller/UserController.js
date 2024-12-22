@@ -2,7 +2,7 @@ const usermodel = require("../Model/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secretKey = "qwertyujhfdfgthyj";
-
+const moment = require("moment");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -20,10 +20,15 @@ const register = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
+
+    //moment for expiry
+    const loginTime = moment().toISOString();
+    const expirationDate = moment(loginTime).add(14, "days").toISOString();
     const data = {
       name,
       email,
       password: hash,
+      expiryTime: expirationDate,
     };
 
     const user = new usermodel(data);
@@ -34,7 +39,6 @@ const register = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -66,14 +70,12 @@ const login = async (req, res) => {
   }
 };
 
+const forgetpassword = async (req, res) => {
+  const { email, newpassword } = req.body;
 
-const forgetpassword = async(req,res)=>{
-  const {email,newpassword} = req.body;
-
-  try{
-    
+  try {
     const user = await usermodel.findOne({ email });
-    console.log(".........")
+    console.log(".........");
     if (!user) {
       return res.status(400).json({ message: "email not found" });
     }
@@ -82,15 +84,32 @@ const forgetpassword = async(req,res)=>{
     const hash = bcrypt.hashSync(newpassword, salt);
 
     user.password = hash;
- 
-  
-    await user.save()
-    res.status(200).json(user)
+
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error });
   }
-  catch(error){
-    res.status(500).json({message:error})
-  }
-}
+};
 
 
-module.exports = { register, login,forgetpassword };
+const calculateDaysLeft = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await usermodel.findOne({ _id: userId });
+
+    // console.log(">>expiryTime>>>>>>", user.expiryTime);
+
+    const now = moment();
+    const expiry = moment(user.expiryTime);
+    const daysLeft = expiry.diff(now, "days");
+
+    res.status(200).json(daysLeft);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+
+module.exports = { register, login, forgetpassword,calculateDaysLeft };
