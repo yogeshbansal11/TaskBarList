@@ -169,10 +169,10 @@
   
   /* Tasks Section */
   .tasks-container {
-    margin-top: 15px;
+    /* margin-top: 15px; */
     padding: 10px;
     background-color: #ffffff;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
   }
   
@@ -194,5 +194,93 @@
     color: #6c757d;
     font-style: italic;
     text-align: center;
+  }
+  
+
+
+  /* .display-container {
+    display: flex;
+  } */
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 0px;
+    margin-left: 0px; 
+  }
+  
+  .lists-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .list-item {
+    width: 250px;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  .tasks-container {
+    background-color: #f1f1f1;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  .task-item {
+    background-color: #e0e0e0;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+  }
+  
+  .add-list-button,
+  .add-list-container button {
+    margin-top: 10px;
+  }
+  
+  .color-picker {
+    margin-top: 10px;
+  }
+  
+  .task-input-container {
+    margin-top: 10px;
+  }
+  
+  .task-input-container input {
+    margin-right: 10px;
+  }
+  
+
+
+  .add-list-button {
+    display: inline-block;
+    margin-left: 20px; /* Moves the button to the right */
+    padding: 10px 20px;
+    background-color: rgba(0, 86, 179, 0.7); /* Slightly transparent blue */
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-list-button:hover {
+    background-color: rgba(0, 86, 179, 1); /* Fully opaque on hover */
+  }
+  
+  
+  .lists-wrapper {
+    display: flex; /* Use flexbox to arrange items horizontally */
+    gap: 20px; /* Add space between lists */
+    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+    margin-top: 20px; /* Adds space above the lists */
+    margin-left: 20px;
+  }
+  
+  .add-list-container {
+    display: flex;
+    margin-top: 20px;
   }
   
