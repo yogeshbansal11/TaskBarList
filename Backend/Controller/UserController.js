@@ -23,7 +23,7 @@ const register = async (req, res) => {
 
     //moment for expiry
     const loginTime = moment().toISOString();
-    const expirationDate = moment(loginTime).add(14, "days").toISOString();
+    const expirationDate = moment(loginTime).add(1, "days").toISOString();
     const data = {
       name,
       email,
