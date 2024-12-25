@@ -117,6 +117,12 @@ const Display = () => {
     }
   };
 
+  const delist = async(listId)=>{
+    const response = await axios.delete("http://localhost:5050/lists/delete",{
+      da
+    })
+  }
+
   const onDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
@@ -220,6 +226,10 @@ const Display = () => {
                           }
                           value={list.color}
                         />
+                      </div>
+
+                      <div className="deletelist">
+                       {/* <button onClick={()=>}> Delete List </button> */}
                       </div>
                     </div>
                   </div>
