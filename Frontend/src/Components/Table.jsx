@@ -1,92 +1,65 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import "./Table.css"; // Import the external CSS
 
 const Table = () => {
-  const styles = {
-    navbar: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "10px 20px",
-      backgroundColor: "#20232a", // Dark background
-      color: "white",
-    },
-    navbarLeft: {
-      display: "flex",
-      alignItems: "center",
-      gap: "15px",
-    },
-    navbarRight: {
-      display: "flex",
-      alignItems: "center",
-      gap: "15px",
-    },
-    item: {
-      fontSize: "16px",
-      cursor: "pointer",
-    },
-    dropdown: {
-      cursor: "pointer",
-    },
-    createButton: {
-      padding: "5px 15px",
-      backgroundColor: "#0079bf", // Blue button
-      color: "white",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-    },
-    timeButton: {
-      padding: "5px 15px",
-      backgroundColor: "#a29bfe", // Purple button
-      color: "white",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-    },
-    searchBar: {
-      padding: "5px 10px",
-      borderRadius: "4px",
-      border: "1px solid #ddd",
-    },
-    icon: {
-      fontSize: "18px",
-      cursor: "pointer",
-    },
-    avatar: {
-      width: "30px",
-      height: "30px",
-      backgroundColor: "#f4c542", // Yellow circle
-      color: "#20232a", // Dark text
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: "50%",
-      fontWeight: "bold",
-    },
+  const [taskItem, setTaskItem] = useState([]);
+  const userId = localStorage.getItem("userId");
+
+ 
+  const getAllTask = async () => {
+    try {
+      const response = await axios.post(
+       'http://localhost:5050/tasks/allTask',
+        {
+          userId,
+        }
+      );
+      setTaskItem(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
-  return (
-    <div style={styles.navbar}>
-      <div style={styles.navbarLeft}>
-        <div style={styles.icon}>▦</div>
-        <div style={styles.item}>Trello</div>
-        <div style={styles.dropdown}>Workspaces ▼</div>
-        <div style={styles.dropdown}>Recent ▼</div>
-        <div style={styles.dropdown}>Starred ▼</div>
-        <div style={styles.dropdown}>Templates ▼</div>
-        <button style={styles.createButton}>Create</button>
-      </div>
+ useEffect(()=>{
+  getAllTask()
+ },[])
 
-      <div style={styles.navbarRight}>
-        <button style={styles.timeButton}>14 days left</button>
-        <input
-          type="text"
-          style={styles.searchBar}
-          placeholder="Search"
-        />
-        <div style={styles.icon}>🏷️</div>
-        <div style={styles.icon}>❓</div>
-        <div style={styles.avatar}>YB</div>
+  return (
+    <div className="table-container">
+      <div className="table-wrapper">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>List</th>
+              <th>Labels</th>
+              <th>Due date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {taskItem.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.listname}</td>
+                {/* Uncomment this section when labels and list are available */}
+                {/* <td>{item.list}</td>
+                <td>
+                  <div className="flex space-x-2">
+                    {item.labels.map((label, i) => (
+                      <span
+                        key={i}
+                        className={label ${getLabelColor(label)}}
+                      ></span>
+                    ))}
+                  </div>
+                </td>
+                <td>{item.dueDate}</td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
