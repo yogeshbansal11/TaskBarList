@@ -3,11 +3,11 @@ const Tasklist = require("../Model/ListModel")
 
 
 exports.createtask = async (req, res) => {
-  const { name, listId } = req.body;
+  const { name, listId,userId,listname } = req.body;
 
   try {
     // Create the task
-    const task = await Taskmodel.create({ name, listId });
+    const task = await Taskmodel.create({ name, listId ,userId,listname});
 
     // Push the task ID to the corresponding list's tasks array
     await Tasklist.findByIdAndUpdate(listId, {
@@ -62,3 +62,15 @@ exports.updateTask = async (req, res) => {
 //   }
 // }
 
+exports.getAllTasks = async (req, res) => {
+  try {
+      const { userId } = req.body;
+
+      const tasks = await Taskmodel.find({userId});
+
+      res.status(200).json(tasks);
+  } catch (error) {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ error: "Failed to fetch tasks." });
+  }
+};

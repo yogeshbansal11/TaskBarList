@@ -11,15 +11,7 @@ exports.createlist = async (req, res) => {
   }
 };
 
-// exports.readUser = async (req, res) => {
-//   const { user } = req.params;
-//   try {
-//     const lists = await listmodel.find({ user: user });
-//     res.status(200).json(lists);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+
 
 exports.readUser = async (req, res) => {
   const { user } = req.params;
@@ -66,3 +58,17 @@ exports.updateListColor = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deletelist = async(req,res)=>{
+  const {listId} = req.body;
+
+  try{
+    const deletedlist = await listmodel.findByIdAndDelete(listId)
+    if(!deletedlist){
+      return res.status(404).json({ error: "List not found" });
+    }
+    res.status(200).json({ success: true, message: "List deleted successfully", deletedlist });
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+}
+}
