@@ -50,17 +50,6 @@ exports.updateTask = async (req, res) => {
 };
 
 
-// exports.completetask=async(req,res)=>{
-//   const {taskId} = req.body;
-//   try{
-//     const task = await Taskmodel.findById(taskId);
-//     task.completed = true;
-//     await task.save();
-//     res.json(task);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// }
 
 exports.getAllTasks = async (req, res) => {
   try {

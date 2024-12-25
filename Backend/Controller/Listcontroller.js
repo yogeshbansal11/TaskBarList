@@ -1,4 +1,5 @@
 const listmodel = require("../Model/ListModel")
+const Taskmodel = require("../Model/taskModel")
 
 exports.createlist = async (req, res) => {
   const { name, user, color = "#f9f9f9" } = req.body; // Default color if none is provided
@@ -63,6 +64,7 @@ exports.deletelist = async(req,res)=>{
   const {listId} = req.body;
 
   try{
+    await Taskmodel.deleteMany({ listId });
     const deletedlist = await listmodel.findByIdAndDelete(listId)
     if(!deletedlist){
       return res.status(404).json({ error: "List not found" });
