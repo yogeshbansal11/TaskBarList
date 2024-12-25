@@ -14,6 +14,12 @@ const taskSchema = mongoose.Schema({
     ref: "List",
     required: true,
   },
+  userId: {
+    type: String,
+  },
+  listname:{
+    type:String,
+  }
 });
 
 module.exports = mongoose.model("Task", taskSchema);

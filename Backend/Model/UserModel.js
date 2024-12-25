@@ -16,6 +16,11 @@ const userschema = mongoose.Schema({
   },
   expiryTime:{
     type: String,
+  },
+  username:{
+    type: String,
+    required: true,
+    unique:true,
   }
 })
 
