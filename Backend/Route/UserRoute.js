@@ -6,5 +6,6 @@ router.post("/register",usercontroller.register);
 router.post("/login",usercontroller.login);
 router.post("/forgetpassword",usercontroller.forgetpassword);
 router.post("/expirytime",usercontroller.calculateDaysLeft)
+router.post("/username",usercontroller.usernameupdate)
 
 module.exports = router;
