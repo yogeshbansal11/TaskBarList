@@ -6,7 +6,8 @@ router.post("/create",taskcontroller.createtask)
 router.post("/allTask", taskcontroller.getAllTasks);
 router.get("/:listId", taskcontroller.readtask);
 router.put("/update/:taskId", taskcontroller.updateTask);
-
+router.post("/dueDate",  taskcontroller.addDueDate);
+router.post("/getdueDateTask", taskcontroller.getTasksWithDueDate);
 
 
 module.exports = router;

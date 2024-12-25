@@ -19,7 +19,10 @@ const taskSchema = mongoose.Schema({
   },
   listname:{
     type:String,
-  }
+  },
+  dueDate: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("Task", taskSchema);
