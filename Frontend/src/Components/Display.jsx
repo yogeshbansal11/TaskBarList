@@ -118,10 +118,15 @@ const Display = () => {
   };
 
   const delist = async(listId)=>{
+    try{
     const response = await axios.delete("http://localhost:5050/lists/delete",{
-      da
+      data:{listId},
     })
+    setLists((prevLists) => prevLists.filter((list) => list._id !== listId));
+  } catch (error) {
+    console.error("Error deleting list:", error.response?.data || error.message);
   }
+  };
 
   const onDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
@@ -229,7 +234,7 @@ const Display = () => {
                       </div>
 
                       <div className="deletelist">
-                       {/* <button onClick={()=>}> Delete List </button> */}
+                       <button onClick={()=>delist(list._id)}> Delete List </button>
                       </div>
                     </div>
                   </div>
