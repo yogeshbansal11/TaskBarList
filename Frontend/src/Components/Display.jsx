@@ -4,6 +4,7 @@ import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import "./Display.css";
 import Navbar3 from "./Navbar3";
+import Opentask from "./Opentask";
 
 const Display = () => {
   const [lists, setLists] = useState([]);
@@ -14,6 +15,7 @@ const Display = () => {
   const [isOpenDot, setIsOpenDot] = useState(false); 
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [activeListColor, setActiveListColor] = useState(null);
+  const [isTaskOpen,setIsTaskOpen]= useState(false)
 
   const userId = localStorage.getItem("userId");
 
@@ -253,6 +255,7 @@ const Display = () => {
                           <Draggable key={task._id} draggableId={task._id} index={index}>
                             {(provided) => (
                               <div
+                              onClick={()=>setIsTaskOpen(true)}
                                 className="task-item"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
@@ -273,6 +276,9 @@ const Display = () => {
               </div>
             ))}
           </div>
+
+
+          {isTaskOpen && <Opentask setIsTaskOpen={setIsTaskOpen}/>}
 
           <button
             className="add-list-button"
