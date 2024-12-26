@@ -203,6 +203,7 @@ const Display = () => {
                     <button onClick={() => addTask(list)}>Save Task</button>
                   </div>
                 )}
+                
                 {isOpenDot && activeListColor === list._id && (
                   <div className="overlay" onClick={() => setIsOpenDot(false)}>
                     <div
@@ -252,6 +253,8 @@ const Display = () => {
                     >
                       {list.tasks && list.tasks.length > 0 ? (
                         list.tasks.map((task, index) => (
+                          <div>
+
                           <Draggable key={task._id} draggableId={task._id} index={index}>
                             {(provided) => (
                               <div
@@ -265,6 +268,8 @@ const Display = () => {
                               </div>
                             )}
                           </Draggable>
+                           {isTaskOpen && <Opentask setIsTaskOpen={setIsTaskOpen} taskId={task._id}/>}
+                            </div>
                         ))
                       ) : (
                         <p>No tasks for this list.</p>
@@ -278,7 +283,7 @@ const Display = () => {
           </div>
 
 
-          {isTaskOpen && <Opentask setIsTaskOpen={setIsTaskOpen}/>}
+         
 
           <button
             className="add-list-button"

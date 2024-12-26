@@ -23,6 +23,9 @@ const taskSchema = mongoose.Schema({
   dueDate: {
     type: Date,
   },
+  startDate:{
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("Task", taskSchema);

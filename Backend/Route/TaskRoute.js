@@ -7,6 +7,7 @@ router.post("/allTask", taskcontroller.getAllTasks);
 router.get("/:listId", taskcontroller.readtask);
 router.put("/update/:taskId", taskcontroller.updateTask);
 router.post("/dueDate",  taskcontroller.addDueDate);
+router.post("/startDate",  taskcontroller.addStartDate);
 router.post("/getdueDateTask", taskcontroller.getTasksWithDueDate);
 
 

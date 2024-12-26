@@ -21,7 +21,7 @@ const CalendarComponent = () => {
         
         const events = tasks.map(task => ({
           title: task.name,
-          start: new Date(task.dueDate),
+          start: new Date(task.startDate || task.dueDate ),
           end: new Date(task.dueDate),
         }));
         
