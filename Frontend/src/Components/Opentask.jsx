@@ -1,4 +1,3 @@
-
 // import React, { useState } from "react";
 
 // const OpenTask = () => {
@@ -88,22 +87,9 @@
 
 // export default OpenTask;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState } from "react";
 
-const OpenTask = () => {
+const OpenTask = ({ setIsTaskOpen }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
@@ -123,34 +109,45 @@ const OpenTask = () => {
 
   return (
     <div>
-      <button onClick={handleModalOpen} style={styles.taskButton}>
-        Task Options
-      </button>
-
-      {isModalOpen && (
-        <div style={styles.modal}>
-          <div style={styles.modalContent}>
-            <h3>Task Options</h3>
-            <button style={styles.button} onClick={() => setIsDatePickerOpen(true)}>
-              Date
-            </button>
-            <button style={styles.button}>Attachment</button>
-            <button style={styles.button}>Location</button>
-            <button onClick={handleModalClose} style={styles.closeButton}>
-              Close
-            </button>
-          </div>
-
+      <div style={styles.modal}>
+        <div style={styles.modalContent}>
+          <h3>Task Options</h3>
+          <button
+            style={styles.button}
+            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+          >
+            Date
+          </button>
           {isDatePickerOpen && (
-            <DatePicker
-              onDateSelect={(date) => setSelectedDate(date)}
-              onClose={() => setIsDatePickerOpen(false)}
-            />
+            // <DatePicker
+            //   onDateSelect={(date) => setSelectedDate(date)}
+            //   onClose={() => setIsDatePickerOpen(false)}
+            // />
+            <div>
+              <label>
+                Start Date
+                <input type="date" />
+              </label>
+              <label>
+                Due Date
+                <input type="date" />
+              </label>
+            </div>
           )}
+          <button style={styles.button}>Attachment</button>
+          <button style={styles.button}>Location</button>
+          <button
+            onClick={() => setIsTaskOpen(false)}
+            style={styles.closeButton}
+          >
+            Close
+          </button>
         </div>
-      )}
+      </div>
 
-      {selectedDate && <p style={styles.selectedDate}>Selected Date: {selectedDate}</p>}
+      {selectedDate && (
+        <p style={styles.selectedDate}>Selected Date: {selectedDate}</p>
+      )}
     </div>
   );
 };
@@ -173,7 +170,9 @@ const DatePicker = ({ onDateSelect, onClose }) => {
   };
 
   const handleDateSelect = (day) => {
-    const selectedDate = `${currentMonth.getFullYear()}-${(currentMonth.getMonth() + 1)
+    const selectedDate = `${currentMonth.getFullYear()}-${(
+      currentMonth.getMonth() + 1
+    )
       .toString()
       .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
     onDateSelect(selectedDate);
@@ -273,6 +272,7 @@ const styles = {
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
+    display: "block",
   },
   closeButton: {
     marginTop: "20px",
@@ -328,12 +328,3 @@ const styles = {
 };
 
 export default OpenTask;
-
-
-
-
-
-
-
-
-
