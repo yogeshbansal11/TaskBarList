@@ -16,7 +16,6 @@ const Display = () => {
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [activeListColor, setActiveListColor] = useState(null);
   const [isTaskOpen,setIsTaskOpen]= useState(false)
-
   const userId = localStorage.getItem("userId");
 
   const fetchLists = async () => {
