@@ -21,7 +21,11 @@ const userschema = mongoose.Schema({
     type: String,
     required: true,
     unique:true,
-  }
+  },
+  // referenceId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   required: true,
+  // },
 })
 
 
