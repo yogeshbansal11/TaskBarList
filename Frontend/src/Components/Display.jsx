@@ -39,6 +39,7 @@ const Display = () => {
     try {
       const response = await axios.get(`http://localhost:5050/tasks/${listId}`);
       setLists((prevLists) =>
+      
         prevLists.map((list) =>
           list._id === listId ? { ...list, tasks: response.data } : list
         )
@@ -58,7 +59,7 @@ const Display = () => {
         fetchTasks(list._id);
       });
     }
-  }, [lists]);
+  }, []);
 
   const addList = async () => {
     if (!listName.trim()) {
@@ -257,8 +258,9 @@ const Display = () => {
                           <Draggable key={task._id} draggableId={task._id} index={index}>
                             {(provided) => (
                               <div
-                              onClick={()=>setIsTaskOpen(true)}
-                                className="task-item"
+                              onClick={()=>(setIsTaskOpen(true),console.log("task",task))}
+                              
+                                className="task-item" style={{backgroundColor:`red`}}
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}

@@ -148,8 +148,9 @@ h4 {
 }
 
 .list-item {
+  height: fit-content;
   width: 250px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   padding: 16px;
   border-radius: 8px;
 }

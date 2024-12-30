@@ -7,6 +7,12 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [message, setMessage] = useState("");
+  const [label, setLabel] = useState(false);
+  const [color,setColor] = useState("");
+
+  const handlelabel = () => {
+    setLabel(true);
+  };
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -23,14 +29,13 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
 
   const handleDueDates = async (e) => {
     try {
-      setDueDate(e.target.value)
+      setDueDate(e.target.value);
       const response = await axios.post("http://localhost:5050/tasks/dueDate", {
         taskId,
-        dueDate:e.target.value,
+        dueDate: e.target.value,
       });
       setMessage(response.data.message || "Dates updated successfully!");
       console.log("yugggggggggggggggggggt");
-      
     } catch (error) {
       setMessage("Failed to update dates. Please try again.");
       console.error(error);
@@ -38,14 +43,16 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
   };
   const handleStartDates = async (e) => {
     try {
-      setStartDate(e.target.value)
-      const response = await axios.post("http://localhost:5050/tasks/startDate", {
-        taskId,
-        startDate:e.target.value,
-      });
+      setStartDate(e.target.value);
+      const response = await axios.post(
+        "http://localhost:5050/tasks/startDate",
+        {
+          taskId,
+          startDate: e.target.value,
+        }
+      );
       setMessage(response.data.message || "Dates updated successfully!");
       console.log("yugggggggggggggggggggt");
-      
     } catch (error) {
       setMessage("Failed to update dates. Please try again.");
       console.error(error);
@@ -88,6 +95,25 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
           )}
           <button style={styles.button}>Attachment</button>
           <button style={styles.button}>Location</button>
+          <button style={styles.button} onClick={handlelabel}>Label</button>
+
+          {label && (
+            <div>
+              <label>
+                Color
+                <input
+                  type="color"
+                  onChange={(e) => (setColor(e.target.value),console.log(color))}
+
+                />
+              </label>
+              {/* <button style={styles.button} onClick={handleDueDates}>
+                Save Dates
+              </button> */}
+              
+            </div>
+          )}
+          
           <button
             onClick={() => setIsTaskOpen(false)}
             style={styles.closeButton}
