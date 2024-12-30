@@ -6,7 +6,7 @@ exports.createtask = async (req, res) => {
 
   try {
     // Create the task
-    const task = await Taskmodel.create({ name, listId, userId, listname });
+    const task = await Taskmodel.create({ name, listId, userId, listname});
 
     // Push the task ID to the corresponding list's tasks array
     await Tasklist.findByIdAndUpdate(listId, {

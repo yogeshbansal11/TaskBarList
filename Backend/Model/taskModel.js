@@ -26,6 +26,10 @@ const taskSchema = mongoose.Schema({
   startDate:{
     type: Date,
   },
+  label:{
+    type:String,
+    default: '#FF0000'
+  }
 });
 
 module.exports = mongoose.model("Task", taskSchema);
