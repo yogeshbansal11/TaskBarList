@@ -120,3 +120,26 @@ exports.getTasksWithDueDate = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deletetask = async (req, res) => {
+  const { taskId } = req.body;
+
+  try {
+    await Taskmodel.findByIdAndDelete(taskId);
+
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting task", error });
+  }
+};
+
+exports.getlabel = async(req,res)=>{
+  const { taskId,label} = req.body;
+  try{
+    await Taskmodel.findByIdAndUpdate(taskId,{label});
+
+    res.status(200).json({message:"color updated"});
+  } catch(error){
+    res.status(500).json({message:"color not added",error})
+  }
+}
