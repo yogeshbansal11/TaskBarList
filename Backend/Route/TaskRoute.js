@@ -9,6 +9,9 @@ router.put("/update/:taskId", taskcontroller.updateTask);
 router.post("/dueDate",  taskcontroller.addDueDate);
 router.post("/startDate",  taskcontroller.addStartDate);
 router.post("/getdueDateTask", taskcontroller.getTasksWithDueDate);
+router.delete("/deletetask", taskcontroller.deletetask);
+router.patch("/setcolor",taskcontroller.getlabel)
+
 
 
 module.exports = router;
