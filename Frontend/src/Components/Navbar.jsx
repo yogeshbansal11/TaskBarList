@@ -44,6 +44,12 @@ const Navbar = ({ click, setClick }) => {
         <Link to={"/table"} style={styles.btn}>
           Table
         </Link>
+        <Link to={"/calendar"} style={styles.btn}>
+          Calendar
+        </Link>
+        <Link to={"/Map"} style={styles.btn}>
+          Map
+        </Link>
       </div>
       <nav style={styles.nav}>
         <button style={styles.button}>{time} days left</button>

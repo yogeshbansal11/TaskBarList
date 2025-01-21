@@ -59,6 +59,42 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
     }
   };
 
+  const handleDeleteTask = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5050/tasks/deletetask`,
+        {
+          taskId,
+        }
+      );
+    
+      if (response.status === 200) {
+        setMessage("Task deleted successfully!");
+        setIsTaskOpen(false); 
+      } else {
+        setMessage("Failed to delete task. Please try again.");
+      }
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message || "Error deleting task. Please try again."
+      );
+      console.error("Error details:", error);
+    }
+  };
+
+  const handleSetColor = async(label)=>{
+    try{
+      const response = await axios.patch(`http://localhost:5050/tasks/setcolor`,
+      {
+        taskId,label
+      }
+      );
+      console.log(taskId)
+    }
+    catch (error) {
+      console.error("Error details:", error);
+    }
+  }
+  
   return (
     <div>
       <div style={styles.modal}>
@@ -96,6 +132,7 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
           <button style={styles.button}>Attachment</button>
           <button style={styles.button}>Location</button>
           <button style={styles.button} onClick={handlelabel}>Label</button>
+          <button style={styles.button} onClick={handleDeleteTask}>Delete Task</button>
 
           {label && (
             <div>
@@ -103,13 +140,10 @@ const OpenTask = ({ setIsTaskOpen, taskId }) => {
                 Color
                 <input
                   type="color"
-                  onChange={(e) => (setColor(e.target.value),console.log(color))}
-
+                  onChange={(e) =>handleSetColor(e.target.value)}
                 />
               </label>
-              {/* <button style={styles.button} onClick={handleDueDates}>
-                Save Dates
-              </button> */}
+
               
             </div>
           )}

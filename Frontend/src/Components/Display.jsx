@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -12,10 +13,10 @@ const Display = () => {
   const [taskName, setTaskName] = useState("");
   const [activeListId, setActiveListId] = useState(null);
   const [isAddingList, setIsAddingList] = useState(false);
-  const [isOpenDot, setIsOpenDot] = useState(false); 
+  const [isOpenDot, setIsOpenDot] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [activeListColor, setActiveListColor] = useState(null);
-  const [isTaskOpen,setIsTaskOpen]= useState(false)
+  const [isTaskOpen, setIsTaskOpen] = useState(false);
   const userId = localStorage.getItem("userId");
 
   const fetchLists = async () => {
@@ -31,7 +32,10 @@ const Display = () => {
       }));
       setLists(listsWithColors);
     } catch (error) {
-      console.error("Error fetching lists:", error.response?.data || error.message);
+      console.error(
+        "Error fetching lists:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -39,13 +43,15 @@ const Display = () => {
     try {
       const response = await axios.get(`http://localhost:5050/tasks/${listId}`);
       setLists((prevLists) =>
-      
         prevLists.map((list) =>
           list._id === listId ? { ...list, tasks: response.data } : list
         )
       );
     } catch (error) {
-      console.error(`Error fetching tasks for list ${listId}:`, error.response?.data || error.message);
+      console.error(
+        `Error fetching tasks for list ${listId}`,
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -59,7 +65,7 @@ const Display = () => {
         fetchTasks(list._id);
       });
     }
-  }, []);
+  }, [lists]);
 
   const addList = async () => {
     if (!listName.trim()) {
@@ -79,7 +85,10 @@ const Display = () => {
       setIsAddingList(false);
       fetchLists();
     } catch (error) {
-      console.error("Error creating list:", error.response?.data || error.message);
+      console.error(
+        "Error creating list:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -99,35 +108,50 @@ const Display = () => {
       setActiveListId(null);
       fetchTasks(list._id);
     } catch (error) {
-      console.error("Error adding task:", error.response?.data || error.message);
+      console.error(
+        "Error adding task:",
+        error.response?.data || error.message
+      );
     }
   };
 
   const updateListColor = async (listId, newColor) => {
     try {
-      const response = await axios.put("http://localhost:5050/lists/updatecolor", {
-        listId,
-        color: newColor,
-      });
+      const response = await axios.put(
+        "http://localhost:5050/lists/updatecolor",
+        {
+          listId,
+          color: newColor,
+        }
+      );
       setLists((prevLists) =>
         prevLists.map((list) =>
           list._id === listId ? { ...list, color: newColor } : list
         )
       );
     } catch (error) {
-      console.error("Error updating color:", error.response?.data || error.message);
+      console.error(
+        "Error updating color:",
+        error.response?.data || error.message
+      );
     }
   };
 
-  const delist = async(listId)=>{
-    try{
-    const response = await axios.delete("http://localhost:5050/lists/delete",{
-      data:{listId},
-    })
-    setLists((prevLists) => prevLists.filter((list) => list._id !== listId));
-  } catch (error) {
-    console.error("Error deleting list:", error.response?.data || error.message);
-  }
+  const delist = async (listId) => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:5050/lists/delete",
+        {
+          data: { listId },
+        }
+      );
+      setLists((prevLists) => prevLists.filter((list) => list._id !== listId));
+    } catch (error) {
+      console.error(
+        "Error deleting list:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   const onDragEnd = async (result) => {
@@ -135,10 +159,16 @@ const Display = () => {
 
     if (!destination) return;
 
-    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
 
     const sourceList = lists.find((list) => list._id === source.droppableId);
-    const destinationList = lists.find((list) => list._id === destination.droppableId);
+    const destinationList = lists.find(
+      (list) => list._id === destination.droppableId
+    );
 
     if (!sourceList || !destinationList) return;
 
@@ -152,12 +182,15 @@ const Display = () => {
         listId: destination.droppableId,
       });
     } catch (error) {
-      console.error("Error updating task:", error.response?.data || error.message);
+      console.error(
+        "Error updating task:",
+        error.response?.data || error.message
+      );
     }
   };
 
   const handledots = (e, listId) => {
-    const rect = e.target.getBoundingClientRect(); 
+    const rect = e.target.getBoundingClientRect();
     setMenuPosition({
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
@@ -203,7 +236,7 @@ const Display = () => {
                     <button onClick={() => addTask(list)}>Save Task</button>
                   </div>
                 )}
-                
+
                 {isOpenDot && activeListColor === list._id && (
                   <div className="overlay" onClick={() => setIsOpenDot(false)}>
                     <div
@@ -237,7 +270,10 @@ const Display = () => {
                       </div>
 
                       <div className="deletelist">
-                       <button onClick={()=>delist(list._id)}> Delete List </button>
+                        <button onClick={() => delist(list._id)}>
+                          {" "}
+                          Delete List{" "}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -254,23 +290,35 @@ const Display = () => {
                       {list.tasks && list.tasks.length > 0 ? (
                         list.tasks.map((task, index) => (
                           <div>
+                            <Draggable
+                              key={task._id}
+                              draggableId={task._id}
+                              index={index}
+                            >
+                              {(provided) => (
+                                  <div
+                                  onClick={()=>(setIsTaskOpen(true))}
+                                    className="task-item"
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      backgroundColor: task.label || "#FFFFFF",
+                                    }}
+                                  >
+                                    {task.name}
+                                  </div>
+                        )}
+                            </Draggable>
 
-                          <Draggable key={task._id} draggableId={task._id} index={index}>
-                            {(provided) => (
-                              <div
-                              onClick={()=>(setIsTaskOpen(true),console.log("task",task))}
-                              
-                                className="task-item" style={{backgroundColor:`red`}}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                {task.name}
-                              </div>
+                            {isTaskOpen && (
+                              <Opentask
+                                setIsTaskOpen={setIsTaskOpen}
+                                taskId={task._id}
+                              />
                             )}
-                          </Draggable>
-                           {isTaskOpen && <Opentask setIsTaskOpen={setIsTaskOpen} taskId={task._id}/>}
-                            </div>
+                          </div>
                         ))
                       ) : (
                         <p>No tasks for this list.</p>
@@ -282,9 +330,6 @@ const Display = () => {
               </div>
             ))}
           </div>
-
-
-         
 
           <button
             className="add-list-button"
