@@ -28,7 +28,7 @@ const taskSchema = mongoose.Schema({
   },
   label:{
     type:String,
-    default: '#FF0000'
+    default: '#FFFFFF'
   }
 });
 
