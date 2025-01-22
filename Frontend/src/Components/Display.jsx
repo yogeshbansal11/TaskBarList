@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -18,6 +16,7 @@ const Display = () => {
   const [activeListColor, setActiveListColor] = useState(null);
   const [isTaskOpen, setIsTaskOpen] = useState(false);
   const userId = localStorage.getItem("userId");
+  const [taskId, setTaskID] = useState(null);
 
   const fetchLists = async () => {
     if (!userId) {
@@ -201,7 +200,7 @@ const Display = () => {
 
   return (
     <>
-      <Navbar3 />
+      {/* <Navbar3 /> */}
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="display-container">
@@ -290,29 +289,34 @@ const Display = () => {
                       {list.tasks && list.tasks.length > 0 ? (
                         list.tasks.map((task, index) => (
                           <div>
+                         
+
                             <Draggable
                               key={task._id}
                               draggableId={task._id}
                               index={index}
                             >
                               {(provided) => (
-                                  <div
-                                  onClick={()=>(setIsTaskOpen(true))}
-                                    className="task-item"
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    style={{
-                                      ...provided.draggableProps.style,
-                                      backgroundColor: task.label || "#FFFFFF",
-                                    }}
-                                  >
-                                    {task.name}
-                                  </div>
-                        )}
+                                <div
+                                  onClick={() => (
+                                    setIsTaskOpen(true), setTaskID(task._id)
+                                  )}
+                                  className="task-item"
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={{
+                                    ...provided.draggableProps.style,
+                                    backgroundColor: task.label || "#FFFFFF",
+                                  }}
+                                >
+                                  {task.name}
+                                </div>
+                              )}
                             </Draggable>
 
-                            {isTaskOpen && (
+                            {isTaskOpen && taskId == task._id && (
+                              // {isTaskOpen && (
                               <Opentask
                                 setIsTaskOpen={setIsTaskOpen}
                                 taskId={task._id}
