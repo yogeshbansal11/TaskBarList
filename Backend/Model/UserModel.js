@@ -26,6 +26,9 @@ const userschema = mongoose.Schema({
   //   type: mongoose.Schema.Types.ObjectId,
   //   required: true,
   // },
+  background:{
+    type:String,
+  }
 })
 
 
