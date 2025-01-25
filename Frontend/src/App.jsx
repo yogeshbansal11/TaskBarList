@@ -33,6 +33,7 @@ const App = () => {
 
   return (
     <Router>
+      <Navbar3/>
       <Navbar click={click} setClick={setClick} />
       <Routes>
         <Route path="/login" element={<Login setClick={setClick} />} />
