@@ -121,15 +121,49 @@ exports.getTasksWithDueDate = async (req, res) => {
   }
 };
 
+// exports.deletetask = async (req, res) => {
+//   const { taskId } = req.body;
+
+//   try {
+//     await Taskmodel.findByIdAndDelete(taskId);
+
+//     res.status(200).json({ message: "Task deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error deleting task", error });
+//   }
+// };
+
+
+
+
 exports.deletetask = async (req, res) => {
   const { taskId } = req.body;
 
-  try {
-    await Taskmodel.findByIdAndDelete(taskId);
+  // Validate taskId presence
+  if (!taskId) {
+    return res.status(400).json({ message: "Task ID is required" });
+  }
 
+  // Validate taskId format
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
+    return res.status(400).json({ message: "Invalid Task ID format" });
+  }
+
+  try {
+    // Attempt to delete the task
+    const deletedTask = await Taskmodel.findByIdAndDelete(taskId);
+
+    // If no task was found and deleted
+    if (!deletedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    // Respond with success message
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting task", error });
+    // Handle errors
+    console.error("Error deleting task:", error);
+    res.status(500).json({ message: "Error deleting task", error: error.message });
   }
 };
 

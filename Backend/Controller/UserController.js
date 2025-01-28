@@ -12,6 +12,10 @@ const register = async (req, res) => {
       return res.status(404).json({ message: "all fields are required" });
     }
 
+    // if(password!=confirmpass){
+     
+    // }
+
     const userEmail = await usermodel.findOne({ email });
     if (userEmail) {
       return res.status(400).json({ message: "Email already exists" });
@@ -24,6 +28,8 @@ const register = async (req, res) => {
     //moment for expiry
     const loginTime = moment().toISOString();
     const expirationDate = moment(loginTime).add(14,"days").toISOString();
+
+
     const data = {
       name,
       email,
@@ -46,7 +52,7 @@ const login = async (req, res) => {
 
   try {
     const userEmail = await usermodel.findOne({ email });
-    console.log(">>>>>>>>>> :", userEmail);
+    // console.log(">>>>>>>>>> :", userEmail);
 
     if (!userEmail) {
       return res.status(400).json({ message: "email not found" });
@@ -56,7 +62,7 @@ const login = async (req, res) => {
     const match = await bcrypt.compare(password, dbpassword);
 
     if (!match) {
-      return res.status(500).json({ message: "invalide password" });
+      return res.status(500).json({ message: "invalid password" });
     }
 
     const token = jwt.sign({ id: userEmail._id }, secretKey, {
@@ -76,7 +82,7 @@ const forgetpassword = async (req, res) => {
 
   try {
     const user = await usermodel.findOne({ email });
-    console.log(".........");
+    // console.log(".........");
     if (!user) {
       return res.status(400).json({ message: "email not found" });
     }
@@ -128,4 +134,20 @@ const usernameupdate = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgetpassword,calculateDaysLeft,usernameupdate };
+const background = async (req, res) => {
+  const { userId, background } = req.body;
+  try {
+    const user = await usermodel.findByIdAndUpdate(
+      userId,
+      { background },
+      { new: true, upsert: true }
+    ); 
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+module.exports = { register, login, forgetpassword,calculateDaysLeft,usernameupdate,background };

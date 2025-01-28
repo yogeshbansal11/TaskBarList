@@ -22,10 +22,7 @@ const userschema = mongoose.Schema({
     required: true,
     unique:true,
   },
-  // referenceId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   required: true,
-  // },
+
   background:{
     type:String,
   }
