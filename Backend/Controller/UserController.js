@@ -1,94 +1,148 @@
-const usermodel = require("../Model/UserModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const secretKey = "qwertyujhfdfgthyj";
-const moment = require("moment");
+import userModel from "../Model/userModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import moment from "moment";
+dotenv.config();
 
-const register = async (req, res) => {
-  const { name, email, password, username} = req.body;
+const secretKey = process.env.secretKey;
 
+export const signUp = async (req, res) => {
   try {
-    if (!(name && email && password && username)) {
-      return res.status(404).json({ message: "all fields are required" });
+    const { name, email, password, conformPassword, refCode } = req.body;
+
+    if (!(name && email && password && conformPassword)) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    // if(password!=confirmpass){
-     
-    // }
+    if (password !== conformPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
-    const userEmail = await usermodel.findOne({ email });
-    if (userEmail) {
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
+    const randomNumbers = Math.floor(10 + Math.random() * 90);
+    const referralCode = name.substring(0, 2).toUpperCase() + randomNumbers;
 
-    //moment for expiry
-    const loginTime = moment().toISOString();
-    const expirationDate = moment(loginTime).add(14,"days").toISOString();
+    const expirationDate = moment().add(16, "days").toISOString();
 
-
-    const data = {
+    const userData = {
       name,
       email,
       password: hash,
       expiryTime: expirationDate,
-      username
+      referralCode,
+      ...(refCode && { refCode }), 
     };
 
-    const user = new usermodel(data);
-    await user.save();
-    res.status(200).json(user);
+    const newUser = new userModel(userData);
+    await newUser.save();
+
+    res.status(201).json({
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      referralCode: newUser.referralCode,
+      refCode: newUser.refCode || null,
+      expiryTime: newUser.expiryTime,
+    });
   } catch (error) {
-    console.log("User not saved", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in signUp:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
 
+export const login = async (req, res) => {
   try {
-    const userEmail = await usermodel.findOne({ email });
-    // console.log(">>>>>>>>>> :", userEmail);
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Email not found! Please signup" });
+    }
+    const dbPassword = user.password;
 
-    if (!userEmail) {
-      return res.status(400).json({ message: "email not found" });
+    const matchData = await bcrypt.compare(password, dbPassword);
+
+    console.log("<<<<<match>>>>>", matchData);
+    if (!matchData) {
+      return res.status(400).json({ message: "invalid password" });
     }
 
-    const dbpassword = userEmail.password;
-    const match = await bcrypt.compare(password, dbpassword);
+    const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: "1h" });
 
-    if (!match) {
-      return res.status(500).json({ message: "invalid password" });
-    }
-
-    const token = jwt.sign({ id: userEmail._id }, secretKey, {
-      expiresIn: "1h",
-    });
+    console.log("<<<<<token>>>>>>", token);
 
     return res
       .status(200)
-      .json({ token, _id: userEmail._id, message: "user Login successful" });
+      .json({ token, _id: user._id, message: "user login successfully" });
   } catch (error) {
-    res.status(500).json({ message: " error in login user" });
+    console.log("login");
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-const forgetpassword = async (req, res) => {
-  const { email, newpassword } = req.body;
+export const setreferralCode = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // const user = await userModel.findOne({ _id:userId });
+    // if (!user) {
+    //   return res.status(400).json({ message: "user not found! Please signup" });
+    // }
+
+    const result = await userModel.findByIdAndUpdate(
+      userId,
+      { referralCode: referralCode },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // const user = await userModel.findOne({ _id:userId });
+    // if (!user) {
+    //   return res.status(400).json({ message: "user not found! Please signup" });
+    // }
+
+    const result = await userModel.findById(userId);
+
+    if (!result) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { userId, newPassword } = req.body;
 
   try {
-    const user = await usermodel.findOne({ email });
-    // console.log(".........");
+    const user = await userModel.findById(userId);
+
     if (!user) {
-      return res.status(400).json({ message: "email not found" });
+      return res.status(400).json({ message: "user not found" });
     }
 
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(newpassword, salt);
+    const hash = bcrypt.hashSync(newPassword, salt);
 
     user.password = hash;
 
@@ -99,14 +153,11 @@ const forgetpassword = async (req, res) => {
   }
 };
 
-
-const calculateDaysLeft = async (req, res) => {
+export const expiryTime = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    const user = await usermodel.findOne({ _id: userId });
-
-    // console.log(">>expiryTime>>>>>>", user.expiryTime);
+    const user = await userModel.findById(userId);
 
     const now = moment();
     const expiry = moment(user.expiryTime);
@@ -118,36 +169,18 @@ const calculateDaysLeft = async (req, res) => {
   }
 };
 
-const usernameupdate = async (req, res) => {
-  const { userId,newusername } = req.body;
+export const updateName = async (req, res) => {
+  const { userId, newName } = req.body;
 
   try {
-    const user = await usermodel.findOne({ _id:userId });
+    const user = await userModel.findById(userId);
     if (!user) {
-      return res.status(400).json({ message: "email not found" });
+      return res.status(400).json({ message: "user not found" });
     }
-    user.username = newusername;
+    user.name = newName;
     await user.save();
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error });
   }
 };
-
-const background = async (req, res) => {
-  const { userId, background } = req.body;
-  try {
-    const user = await usermodel.findByIdAndUpdate(
-      userId,
-      { background },
-      { new: true, upsert: true }
-    ); 
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-
-module.exports = { register, login, forgetpassword,calculateDaysLeft,usernameupdate,background };

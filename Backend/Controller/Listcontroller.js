@@ -1,60 +1,56 @@
-const listmodel = require("../Model/ListModel")
-const Taskmodel = require("../Model/taskModel")
+import listSchema from "../Model/listSchema.js";
+import taskSchema from "../Model/taskSchema.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-exports.createlist = async (req, res) => {
-  const { name, user, color = "#f9f9f9" } = req.body; // Default color if none is provided
-
-  try {
-    const list = await listmodel.create({ name, user, color }); // Include color when creating the list
-    res.status(200).json(list);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+export const create = async (req, res) => {
+    try {
+        const { name, userId,listColor } = req.body;
+        const response = await listSchema.create({ name, user: userId, listColor});
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
+export const getListsByUser = async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const lists = await listSchema.find({ user: userId });
+      res.status(200).json(lists);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
 
-
-exports.readUser = async (req, res) => {
-  const { user } = req.params;
+export const updateListColor = async (req, res) => {
   try {
-    const lists = await listmodel.find({ user: user }); // This includes the color field
-    res.status(200).json(lists);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    const { listId, listColor } = req.body; 
 
-
-exports.updateListColor = async (req, res) => {
-  const { listId, color } = req.body; // Expect the list ID and the new color in the request body
-
-  try {
-    // Find and update the color of the list
-    const updatedList = await listmodel.findByIdAndUpdate(
+    const updatedList = await listSchema.findByIdAndUpdate(
       listId, 
-      { color }, 
-      { new: true } // Return the updated list after the operation
+      { listColor }, 
     );
     if (!updatedList) {
       return res.status(404).json({ error: "List not found" });
     }
-    res.status(200).json(updatedList); // Return the updated list
+    res.status(200).json(updatedList);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-exports.deletelist = async(req,res)=>{
+export const deleteList = async (req, res) => {
   const {listId} = req.body;
 
   try{
-    await Taskmodel.deleteMany({ listId });
-    const deletedlist = await listmodel.findByIdAndDelete(listId)
+    await taskSchema.deleteMany({ listId });
+    const deletedlist = await listSchema.findByIdAndDelete(listId)
     if(!deletedlist){
       return res.status(404).json({ error: "List not found" });
     }
     res.status(200).json({ success: true, message: "List deleted successfully", deletedlist });
   }catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
 }
 }

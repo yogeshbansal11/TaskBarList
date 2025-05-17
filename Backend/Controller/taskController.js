@@ -1,71 +1,29 @@
-const Taskmodel = require("../Model/taskModel");
-const Tasklist = require("../Model/ListModel");
-
-exports.createtask = async (req, res) => {
-  const { name, listId, userId, listname } = req.body;
-
+import mongoose from "mongoose";
+import taskSchema from "../Model/taskSchema.js";
+import listSchema from "../Model/listSchema.js";
+import {uploadFile} from "../Cloudinary/uploadFile.js"
+export const createTask = async (req, res) => {
+  const { name, listId, userId, listName } = req.body;
   try {
-    // Create the task
-    const task = await Taskmodel.create({ name, listId, userId, listname});
+    const list = await listSchema.findById(listId);
+    if (!list) {
+      return res.status(404).json({ error: "List not found" });
+    }
 
-    // Push the task ID to the corresponding list's tasks array
-    await Tasklist.findByIdAndUpdate(listId, {
-      $push: { tasks: task._id },
-    });
+    const task = await taskSchema.create({ name, listId, userId, listName });
 
-    // Return the created task
     res.status(200).json(task);
   } catch (error) {
-    console.error(error);
+    console.error("Error creating task:", error);
     res.status(500).json({ error: error.message });
   }
 };
 
-exports.readtask = async (req, res) => {
-  const { listId } = req.params;
-
-  try {
-    const tasks = await Taskmodel.find({ listId });
-    res.status(200).json(tasks);
-  } catch (err) {
-    console.error("Error fetching tasks:", err);
-    res.status(500).json({ error: "Failed to fetch tasks." });
-  }
-};
-
-exports.updateTask = async (req, res) => {
-  const { taskId } = req.params;
-  const { listId } = req.body;
-
-  try {
-    const task = await Taskmodel.findById(taskId);
-    task.listId = listId;
-    await task.save();
-
-    res.status(200).json(task);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.getAllTasks = async (req, res) => {
-  try {
-    const { userId } = req.body;
-
-    const tasks = await Taskmodel.find({ userId });
-
-    res.status(200).json(tasks);
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    res.status(500).json({ error: "Failed to fetch tasks." });
-  }
-};
-
-exports.addDueDate = async (req, res) => {
+export const addDueDate = async (req, res) => {
   try {
     const { taskId, dueDate } = req.body;
-    const task = await Taskmodel.findByIdAndUpdate(
-      {_id:taskId},
+    const task = await taskSchema.findByIdAndUpdate(
+      taskId,
       { dueDate: dueDate }
       // { new: true }
     );
@@ -81,12 +39,12 @@ exports.addDueDate = async (req, res) => {
   }
 };
 
-exports.addStartDate = async (req, res) => {
+export const addStartDate = async (req, res) => {
   try {
     const { taskId, startDate } = req.body;
-    const task = await Taskmodel.findByIdAndUpdate(
-      {_id:taskId},
-      { startDate: startDate }
+    const task = await taskSchema.findByIdAndUpdate(
+      taskId,
+      { startDate}
       // { new: true }
     );
 
@@ -101,7 +59,45 @@ exports.addStartDate = async (req, res) => {
   }
 };
 
-exports.getTasksWithDueDate = async (req, res) => {
+export const setLocation = async (req, res) => {
+  try {
+    const { taskId, location } = req.body;
+    const task = await taskSchema.findByIdAndUpdate(
+      taskId,
+      { location}
+      // { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getLocation = async (req, res) => {
+  try {
+    const { taskId } = req.body;
+    const task = await taskSchema.findById(
+      taskId,
+    );
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getTasksWithDueDate = async (req, res) => {
   try {
     const { userId } = req.body;
 
@@ -109,7 +105,7 @@ exports.getTasksWithDueDate = async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    const tasks = await Taskmodel.find({
+    const tasks = await taskSchema.find({
       userId,
       dueDate: { $exists: true, $ne: null },
     });
@@ -121,59 +117,117 @@ exports.getTasksWithDueDate = async (req, res) => {
   }
 };
 
-// exports.deletetask = async (req, res) => {
-//   const { taskId } = req.body;
-
-//   try {
-//     await Taskmodel.findByIdAndDelete(taskId);
-
-//     res.status(200).json({ message: "Task deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error deleting task", error });
-//   }
-// };
-
-
-
-
-exports.deletetask = async (req, res) => {
-  const { taskId } = req.body;
-
-  // Validate taskId presence
-  if (!taskId) {
-    return res.status(400).json({ message: "Task ID is required" });
-  }
-
-  // Validate taskId format
-  if (!mongoose.Types.ObjectId.isValid(taskId)) {
-    return res.status(400).json({ message: "Invalid Task ID format" });
-  }
-
+export const getTasksFromList = async (req, res) => {
+  const { listId } = req.params;
   try {
-    // Attempt to delete the task
-    const deletedTask = await Taskmodel.findByIdAndDelete(taskId);
-
-    // If no task was found and deleted
-    if (!deletedTask) {
-      return res.status(404).json({ message: "Task not found" });
+    if (!mongoose.Types.ObjectId.isValid(listId)) {
+      return res.status(400).json({ error: "Invalid listId" });
     }
 
-    // Respond with success message
-    res.status(200).json({ message: "Task deleted successfully" });
+    const tasks = await taskSchema.find({ listId });
+
+    res.status(200).json(tasks);
   } catch (error) {
-    // Handle errors
-    console.error("Error deleting task:", error);
-    res.status(500).json({ message: "Error deleting task", error: error.message });
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "Failed to fetch tasks." });
   }
 };
 
-exports.getlabel = async(req,res)=>{
-  const { taskId,label} = req.body;
-  try{
-    await Taskmodel.findByIdAndUpdate(taskId,{label});
+export const getAllTasks = async (req, res) => {
+  try {
+    const { userId } = req.body;
 
-    res.status(200).json({message:"color updated"});
-  } catch(error){
-    res.status(500).json({message:"color not added",error})
+    const tasks = await taskSchema.find({ userId });
+
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "Failed to fetch tasks." });
   }
-}
+};
+
+export const updateTask = async (req, res) => {
+  const { taskId } = req.params;
+  const { listId,listName } = req.body;
+
+  try {
+    const task = await taskSchema.findById(taskId);
+    task.listId = listId;
+    task.listName = listName;
+    await task.save();
+
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateTaskColor = async (req, res) => {
+  try {
+    const { taskId, taskColor } = req.body; 
+
+    // console.log(">>>>>>>",taskId, taskColor)
+
+    const updatedTask = await taskSchema.findByIdAndUpdate(
+      taskId, 
+      { taskColor }, 
+      { new: true, upsert: true }
+    );
+    if (!updatedTask) {
+      return res.status(404).json({ error: "task not found" });
+    }
+    // console.log("updatedTask", updatedTask);
+    
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const setAttachment = async (req, res) => {
+  try {
+    const { taskId } = req.body; // Get taskId from body
+    const image = req.file; // Access the uploaded file via req.file
+    
+    if (!image) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+    
+    // Upload the file to Cloudinary
+    console.log("Received file object:", image);
+    const uploadedFile = await uploadFile(image); // uploadFile should return the uploaded file URL
+    console.log("Uploaded file URL:", uploadedFile);
+
+    // Update the task with the uploaded image URL
+    const updatedTask = await taskSchema.findByIdAndUpdate(
+      taskId,
+      { image: uploadedFile }, // Directly using uploadedFile URL
+      { new: true, upsert: true }
+    );
+
+    return res.status(200).json({ success: true, data: uploadedFile });
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const deleteTask = async (req, res) => {
+  try {
+    const { taskId } = req.body; 
+
+
+    const Task = await taskSchema.findByIdAndDelete(
+      taskId
+    );
+    if (!Task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.status(200).json(Task);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
