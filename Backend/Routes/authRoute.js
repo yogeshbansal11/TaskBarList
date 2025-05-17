@@ -1,5 +1,5 @@
 import express from 'express'
-import {expiryTime, getUser, login, resetPassword, setreferralCode, signUp, updateName} from '../Controller/userController.js'
+import {expiryTime, getUser, login, resetPassword, setreferralCode, signUp, updateName} from '../Controller/UserController.js'
 import VerifyToken from '../middleware/VerifyToken.js';
 
 const route = express.Router();

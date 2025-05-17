@@ -7,6 +7,7 @@ dotenv.config();
 
 const secretKey = process.env.secretKey;
 
+// update
 export const signUp = async (req, res) => {
   try {
     const { name, email, password, conformPassword, refCode } = req.body;
