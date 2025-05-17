@@ -1,0 +1,21 @@
+.rbc-calendar {
+    background-color: transparent !important; /* Removes the default white background */
+    /* color: #38bdf8;  */
+    /* Optional: Change text color */
+  }
+  
+  .rbc-day-bg {
+    background-color: rgba(19, 25, 33, 0.8); 
+  }
+  
+  .rbc-header {
+    background-color: #1e252e; /* Dark header */
+    /* color: #facc15;  */
+  }
+  
+  .rbc-btn-group button{
+    color: gray;
+  }
+  .rbc-day-slot .rbc-time-slot {
+    background-color: rgba(25, 33, 43, 0.911);
+}
