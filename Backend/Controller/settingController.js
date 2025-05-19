@@ -1,5 +1,5 @@
 import SettingModel from "../Model/settingModel.js";
-import userModel from "../Model/userModel.js";
+import userModel from "../Model/UserModel.js";
 import nodemailer from 'nodemailer'
 
 export const createAddUpdateNavList = async (req, res) => {
