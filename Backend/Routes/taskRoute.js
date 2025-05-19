@@ -14,7 +14,7 @@ import {
   setLocation,
   updateTask,
   updateTaskColor,
-} from "../Controller/TaskController.js";
+} from "../Controller/taskController.js";
 
 const route = express.Router();
 const storage = multer.memoryStorage(); // Store files in memory
